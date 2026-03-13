@@ -10,9 +10,14 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  List <ChatMessage> Messages = [];
+  List<ChatMessage> Messages = [];
   ChatUser currentUser = ChatUser(id: '0', firstName: 'User');
-  ChatUser geminiUser = ChatUser(id: '1', firstName: 'Gemini', profileImage: 'https://images.seeklogo.com/logo-png/62/1/google-gemini-icon-logo-png_seeklogo-623016.png' );
+  ChatUser geminiUser = ChatUser(
+    id: '1',
+    firstName: 'Gemini',
+    profileImage:
+        'https://images.seeklogo.com/logo-png/62/1/google-gemini-icon-logo-png_seeklogo-623016.png',
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,10 +31,18 @@ class _HomepageState extends State<Homepage> {
       body: _BuildUI(),
     );
   }
-  Widget _BuildUI(){
-  return DashChat(currentUser: currentUser, onSend: _sendMessage, messages: messages)
+
+  Widget _BuildUI() {
+    return DashChat(
+      currentUser: currentUser,
+      onSend: _sendMessage,
+      messages: Messages,
+    );
   }
-  void _sendMessage(ChatMessage chatMessage){
-  
+
+  void _sendMessage(ChatMessage chatMessage) {
+    setState(() {
+      Messages = [chatMessage, ...Messages];
+    });
   }
 }
