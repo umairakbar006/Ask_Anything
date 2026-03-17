@@ -37,6 +37,9 @@ class _HomepageState extends State<Homepage> {
 
   Widget _BuildUI() {
     return DashChat(
+      inputOptions: InputOptions(
+        trailing: [IconButton(onPressed: () {}, icon: Icon(Icons.image))],
+      ),
       currentUser: currentUser,
       onSend: _sendMessage,
       messages: Messages,
