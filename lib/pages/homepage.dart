@@ -1,5 +1,6 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Homepage extends StatefulWidget {
@@ -10,6 +11,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final Gemini gemini = Gemini.instance;
+
   List<ChatMessage> Messages = [];
   ChatUser currentUser = ChatUser(id: '0', firstName: 'User');
   ChatUser geminiUser = ChatUser(
@@ -44,5 +47,20 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       Messages = [chatMessage, ...Messages];
     });
+    try {
+      List<Content> history = Messages.reversed
+          .map(
+            (e) => Content(
+              parts: [Part.text(e.text)],
+              role: e.user.id == '0' ? 'user' : 'model',
+            ),
+          )
+          .toList();
+      gemini.streamChat(history).listen((value) {
+        print(value.output);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
