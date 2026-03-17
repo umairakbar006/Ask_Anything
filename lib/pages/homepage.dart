@@ -57,7 +57,23 @@ class _HomepageState extends State<Homepage> {
           )
           .toList();
       gemini.streamChat(history).listen((value) {
-        print(value.output);
+        String responseChunk = value.output ?? "";
+        setState(() {
+          if (Messages.isNotEmpty && Messages.first.user.id == geminiUser.id) {
+            Messages[0] = ChatMessage(
+              user: geminiUser,
+              createdAt: DateTime.now(),
+              text: Messages.first.text + responseChunk,
+            );
+          } else {
+            ChatMessage response = ChatMessage(
+              user: geminiUser,
+              createdAt: DateTime.now(),
+              text: responseChunk,
+            );
+            Messages = [response, ...Messages];
+          }
+        });
       });
     } catch (e) {
       print(e);
